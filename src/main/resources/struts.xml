@@ -15,8 +15,8 @@
 	<package name="userController" extends="struts-default"
 		namespace="/User">
 		<action name="Login" class="login" method="login">
-			<result name="success">/success.jsp</result>
-			<result name="error">/error.jsp</result>
+			<result name="success">../success.jsp</result>
+			<result name="error">../error.jsp</result>
 		</action>
 	</package>
 	<!-- 商品相关请求转发 -->

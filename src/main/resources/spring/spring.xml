@@ -11,9 +11,11 @@
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc.xsd
         http://www.springframework.org/schema/tx
-        http://www.springframework.org/schema/tx/spring-tx.xsd">
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop   
+     	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 	<context:annotation-config />
-	<tx:annotation-driven/>  
+	<tx:annotation-driven />
 	<context:component-scan base-package="com.luotianyi.test3.service">
 		<context:include-filter type="annotation"
 			expression="org.springframework.stereotype.Service" />
@@ -100,6 +102,7 @@
 		class="org.springframework.orm.hibernate5.support.OpenSessionInViewInterceptor">
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
-	<bean id="login" class="com.luotianyi.test3.web.UserController">
+	<bean id="login" class="com.luotianyi.test3.web.UserController"
+		scope="prototype">
 	</bean>
 </beans>

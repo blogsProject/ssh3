@@ -200,7 +200,7 @@
 					<webApp>
 						<contextPath>/</contextPath>
 						<!-- 配置静态资源可以热修改 -->
-						<defaultsDescriptor>src/main/resources/webdefault.xml</defaultsDescriptor>
+						<defaultsDescriptor>src/main/resources/serverConfig/webdefault.xml</defaultsDescriptor>
 						<allowDuplicateFragmentNames>true</allowDuplicateFragmentNames>
 					</webApp>
 				</configuration>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+	<context:annotation-config />
+	<tx:annotation-driven/>  
+	<context:component-scan base-package="com.luotianyi.test3.service">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Service" />
+	</context:component-scan>
+	<context:component-scan base-package="com.luotianyi.test3.dao">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Repository" />
+	</context:component-scan>
+	<context:component-scan base-package="com.luotianyi.test3.web">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	<!-- ************************数据库配置文件读取************************ -->
+
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:config.properties</value>
+				<value>classpath:hibernateconfig.properties</value>
+			</list>
+		</property>
+	</bean>
+	<!-- ************************数据源配置************************** -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		init-method="init" destroy-method="close">
+		<!-- 数据库基本信息配置 -->
+		<property name="driverClassName" value="${dirver}" />
+		<property name="url" value="${url}" />
+		<property name="username" value="${dbusername}" />
+		<property name="password" value="${dbpassword}" />
+		<!-- 初始化连接数量 -->
+		<property name="initialSize" value="${initialSize}" />
+		<!-- 最大并发连接数 -->
+		<property name="maxActive" value="${maxActive}" />
+		<!-- 最大空闲连接数 -->
+		<property name="maxIdle" value="${maxIdle}" />
+		<!-- 最小空闲连接数 -->
+		<property name="minIdle" value="${minIdle}" />
+		<!-- 配置获取连接等待超时的时间 -->
+		<property name="maxWait" value="${maxWait}" />
+		<!-- 超过时间限制是否回收 -->
+		<property name="removeAbandoned" value="${removeAbandoned}" />
+		<!-- 超过时间限制多长； -->
+		<property name="removeAbandonedTimeout" value="${removeAbandonedTimeout}" />
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis}" />
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis}" />
+		<!-- 用来检测连接是否有效的sql，要求是一个查询语句 -->
+		<property name="validationQuery" value="${validationQuery}" />
+		<!-- 申请连接的时候检测 -->
+		<property name="testWhileIdle" value="${testWhileIdle}" />
+		<!-- 申请连接时执行validationQuery检测连接是否有效，配置为true会降低性能 -->
+		<property name="testOnBorrow" value="${testOnBorrow}" />
+		<!-- 归还连接时执行validationQuery检测连接是否有效，配置为true会降低性能 -->
+		<property name="testOnReturn" value="${testOnReturn}" />
+		<!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+		<property name="poolPreparedStatements" value="${poolPreparedStatements}" />
+		<property name="maxPoolPreparedStatementPerConnectionSize"
+			value="${maxPoolPreparedStatementPerConnectionSize}" />
+		<!--属性类型是字符串，通过别名的方式配置扩展插件，常用的插件有： 监控统计用的filter:stat 日志用的filter:log4j 防御SQL注入的filter:wall -->
+		<property name="filters" value="wall,stat" />
+	</bean>
+	<!-- ************************hibernate配置************************ -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="packagesToScan" value="com.luotianyi.test3.entiy"></property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop><!-- 是否展示SQL -->
+				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop><!-- 是否自动创建表结构 -->
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="hibernate.transaction.coordinator_class">${hibernate.transaction.coordinator_class}</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="openSession"
+		class="org.springframework.orm.hibernate5.support.OpenSessionInViewInterceptor">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	<bean id="login" class="com.luotianyi.test3.web.UserController">
+	</bean>
+</beans>
